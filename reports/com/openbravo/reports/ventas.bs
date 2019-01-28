@@ -1,0 +1,34 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Ventas");
+report.setReport("/com/openbravo/reports/ventas");
+report.setResourceBundle("com/openbravo/reports/ventas_messages");
+
+report.setSentence("SELECT PRODUCTS.CODE AS REFERENCIA, PRODUCTS.NAME AS NOMBRE, "+
+"CASE WHEN TICKETLINES.PRESENTACION=0 THEN 'PIEZA' WHEN TICKETLINES.PRESENTACION=1 THEN 'SERIE' WHEN TICKETLINES.PRESENTACION=2 THEN 'PAQUETE' WHEN TICKETLINES.PRESENTACION=3 THEN 'CAJA' ELSE '' END AS PRESENTACION, "+
+"TICKETLINES.UNIDADES AS UNIDADES, SUM(TICKETLINES.PRICE) AS PRECIO, SUM(TICKETLINES.UNITS) AS CANTIDAD, SUM(TICKETLINES.UNITS*TICKETLINES.PRICE) AS IMPORTE, "+
+"LOCATIONS.NAME AS SUCURSAL FROM TICKETLINES INNER JOIN TICKETS ON TICKETLINES.TICKET=TICKETS.ID INNER JOIN RECEIPTS ON RECEIPTS.ID=TICKETS.ID INNER JOIN PRODUCTS ON PRODUCTS.ID=TICKETLINES.PRODUCT INNER JOIN LOCATIONS ON LOCATIONS.ID=TICKETS.STATUS "+
+"WHERE ?(QBF_FILTER) GROUP BY PRODUCTS.CODE, PRODUCTS.NAME,TICKETLINES.PRESENTACION,TICKETLINES.UNIDADES,LOCATIONS.NAME ORDER BY PRODUCTS.CODE, LOCATIONS.ID");
+
+report.addParameter("RECEIPTS.DATENEW");
+report.addParameter("RECEIPTS.DATENEW");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsDatesInterval());
+
+report.addParameter("PRODUCTS.CODE");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsText("Codigo de barras"));
+
+report.addParameter("PRODUCTS.CATEGORY");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsComboCategories("Categoria"));
+
+report.addParameter("LOCATIONS.ID");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addField("REFERENCIA", com.openbravo.data.loader.Datas.STRING);
+report.addField("NOMBRE", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRESENTACION", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNIDADES", com.openbravo.data.loader.Datas.INT);
+report.addField("PRECIO", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CANTIDAD", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("IMPORTE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("SUCURSAL", com.openbravo.data.loader.Datas.STRING);
+report;

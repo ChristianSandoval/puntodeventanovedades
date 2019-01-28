@@ -1,0 +1,15 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Cajon");
+report.setReport("/com/openbravo/reports/cajon");
+report.setResourceBundle("com/openbravo/reports/cajon_messages");
+
+report.setSentence("SELECT FECHA,USUARIO FROM CAJON WHERE ?(QBF_FILTER) ORDER BY CAJON.FECHA DESC");
+report.addParameter("CAJON.FECHA");
+report.addParameter("CAJON.FECHA");
+
+
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsDatesInterval());
+report.addField("FECHA", com.openbravo.data.loader.Datas.STRING);
+report.addField("USUARIO", com.openbravo.data.loader.Datas.STRING);
+report;

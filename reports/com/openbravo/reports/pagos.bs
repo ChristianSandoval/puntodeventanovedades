@@ -1,0 +1,35 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Pagos");
+report.setReport("/com/openbravo/reports/pagos");
+report.setResourceBundle("com/openbravo/reports/ventas_messages");
+
+report.setSentence("SELECT R.DATENEW AS FECHA, IFNULL(C.SEARCHKEY,'') AS IDCLIENTE, "+
+"C.NAME AS CLIENTE, P.TOTAL AS TOTAL, PE.NAME AS USUARIO, "+
+"CASE WHEN P.PAYMENT='cash' THEN 'EFECTIVO' WHEN P.PAYMENT='magcard' THEN 'TARJETA' "+
+"WHEN P.PAYMENT = 'cheque' THEN 'DEPOSITO' WHEN P.PAYMENT='debtpaid' THEN 'PAGO_DEUDA' "+
+"WHEN P.PAYMENT='cashrefund' THEN 'DEV_EFECTIVO' WHEN P.PAYMENT='chequerefund' THEN 'DEV_DEPOSITO' "+
+"WHEN P.PAYMENT='debt' THEN 'DEUDA' ELSE '' END AS PAGO "+
+"FROM PAYMENTS P INNER JOIN RECEIPTS R ON R.ID=P.RECEIPT "+
+"INNER JOIN TICKETS T ON T.ID=R.ID INNER JOIN LOCATIONS L ON T.STATUS=L.ID "+
+"INNER JOIN PEOPLE PE ON PE.ID=T.PERSON "+
+"LEFT JOIN CUSTOMERS C ON C.ID=T.CUSTOMER WHERE ?(QBF_FILTER) "+
+"ORDER BY R.DATENEW DESC");
+
+report.addParameter("R.DATENEW");
+report.addParameter("R.DATENEW");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsDatesInterval());
+
+report.addParameter("T.CUSTOMER");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsCustomer());
+
+report.addParameter("T.STATUS");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addField("FECHA", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("IDCLIENTE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CLIENTE", com.openbravo.data.loader.Datas.STRING);
+report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("USUARIO", com.openbravo.data.loader.Datas.STRING);
+report.addField("PAGO", com.openbravo.data.loader.Datas.STRING);
+report;

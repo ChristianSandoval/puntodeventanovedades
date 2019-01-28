@@ -1,0 +1,24 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.ClientesDeuda");
+report.setReport("/com/openbravo/reports/clientes");
+report.setResourceBundle("com/openbravo/reports/ventas_messages");
+
+report.setSentence("SELECT CUSTOMERS.SEARCHKEY AS TELEFONO,CUSTOMERS.NAME AS NOMBRE, IFNULL(CUSTOMERS.ADDRESS,'') AS DIRECCION, IFNULL(CUSTOMERS.NOTES,'') AS OBSERVACIONES, CUSTOMERS.MAXDEBT AS TOPEDEUDA, IFNULL(CUSTOMERS.CURDEBT,0) AS DEUDAACTUAL, IFNULL(CUSTOMERS.CURDATE,NOW()) AS ULTIMOMOVIMIENTO"+
+", LOCATIONS.NAME AS SUCURSAL FROM CUSTOMERS INNER JOIN LOCATIONS ON LOCATIONS.ID=CUSTOMERS.CARD WHERE ?(QBF_FILTER) ORDER BY CUSTOMERS.CURDEBT DESC");
+report.addParameter("CUSTOMERS.ID");
+report.addParameter("CUSTOMERS.NAME");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsCustomer());
+
+report.addParameter("CUSTOMERS.CARD");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addField("TELEFONO", com.openbravo.data.loader.Datas.STRING);
+report.addField("NOMBRE", com.openbravo.data.loader.Datas.STRING);
+report.addField("DIRECCION", com.openbravo.data.loader.Datas.STRING);
+report.addField("OBSERVACIONES", com.openbravo.data.loader.Datas.STRING);
+report.addField("TOPEDEUDA", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("DEUDAACTUAL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("ULTIMOMOVIMIENTO", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("SUCURSAL", com.openbravo.data.loader.Datas.STRING);
+report;

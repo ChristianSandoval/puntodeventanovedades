@@ -1,0 +1,43 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.VentasDetalle");
+report.setReport("/com/openbravo/reports/ventasdetalle");
+report.setResourceBundle("com/openbravo/reports/ventasdetalle_messages");
+
+report.setSentence("SELECT TICKETS.TICKETID AS ID,RECEIPTS.DATENEW AS FECHA,PRODUCTS.CODE AS REFERENCIA, PRODUCTS.NAME AS NOMBRE, IFNULL(CUSTOMERS.SEARCHKEY,'') AS CLIENTEID, IFNULL(CUSTOMERS.NAME,'') AS CLIENTE,"+
+"TICKETLINES.PRICE/TICKETLINES.UNIDADES AS 'P.UNITARIO', CASE WHEN TICKETLINES.PRESENTACION=0 THEN 'PIEZA' WHEN TICKETLINES.PRESENTACION=1 THEN 'SERIE' WHEN TICKETLINES.PRESENTACION=2 THEN 'PAQUETE' WHEN TICKETLINES.PRESENTACION=3 THEN 'CAJA' ELSE '' END AS PRESENTACION, "+
+"TICKETLINES.UNIDADES AS UNIDADES,CASE WHEN TICKETLINES.UNITS>0 THEN TICKETLINES.PRICE ELSE TICKETLINES.PRICE*-1 END AS PRECIO, TICKETLINES.UNITS AS CANTIDAD, TICKETLINES.UNITS*TICKETLINES.PRICE AS IMPORTE, "+
+"LOCATIONS.NAME AS SUCURSAL, PEOPLE.NAME AS USUARIO FROM TICKETLINES INNER JOIN TICKETS ON TICKETLINES.TICKET=TICKETS.ID INNER JOIN RECEIPTS ON RECEIPTS.ID=TICKETS.ID INNER JOIN PRODUCTS ON PRODUCTS.ID=TICKETLINES.PRODUCT INNER JOIN PEOPLE ON PEOPLE.ID=TICKETS.PERSON INNER JOIN LOCATIONS ON LOCATIONS.ID=TICKETS.STATUS LEFT JOIN CUSTOMERS ON CUSTOMERS.ID=TICKETS.CUSTOMER "+
+"WHERE ?(QBF_FILTER) ORDER BY RECEIPTS.DATENEW");
+
+report.addParameter("RECEIPTS.DATENEW");
+report.addParameter("RECEIPTS.DATENEW");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsDatesInterval());
+
+report.addParameter("PRODUCTS.CODE");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsText("Codigo de barras"));
+
+report.addParameter("PRODUCTS.CATEGORY");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsComboCategories("Categoria"));
+
+report.addParameter("TICKETS.STATUS");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addParameter("TICKETS.CUSTOMER");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsCustomer());
+
+report.addField("ID", com.openbravo.data.loader.Datas.INT);
+report.addField("FECHA", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("REFERENCIA", com.openbravo.data.loader.Datas.STRING);
+report.addField("NOMBRE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CLIENTEID", com.openbravo.data.loader.Datas.STRING);
+report.addField("CLIENTE", com.openbravo.data.loader.Datas.STRING);
+report.addField("P.UNITARIO", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRESENTACION", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNIDADES", com.openbravo.data.loader.Datas.INT);
+report.addField("PRECIO", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CANTIDAD", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("IMPORTE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("SUCURSAL", com.openbravo.data.loader.Datas.STRING);
+report.addField("USUARIO", com.openbravo.data.loader.Datas.STRING);
+report;

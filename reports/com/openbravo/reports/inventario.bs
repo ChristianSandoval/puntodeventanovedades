@@ -1,0 +1,24 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Inventario");
+report.setReport("/com/openbravo/reports/inventario");
+report.setResourceBundle("com/openbravo/reports/inventario_messages");
+
+report.setSentence("SELECT CATEGORIES.NAME AS NAME,PRODUCTS.CODE, PRODUCTS.NAME AS NOMBRE, STOCKCURRENT.UNITS AS UNIDADES, 0 AS PRICEBUY, LOCATIONS.NAME AS SUCURSAL FROM PRODUCTS INNER JOIN CATEGORIES ON PRODUCTS.CATEGORY = CATEGORIES.ID INNER JOIN STOCKCURRENT ON STOCKCURRENT.PRODUCT=PRODUCTS.ID INNER JOIN LOCATIONS ON LOCATIONS.ID=STOCKCURRENT.LOCATION WHERE ?(QBF_FILTER) ORDER BY PRODUCTS.NAME");
+
+report.addParameter("PRODUCTS.CODE");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsText("Codigo de barras"));
+
+report.addParameter("PRODUCTS.CATEGORY");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsComboCategories("Categoria"));
+
+report.addParameter("LOCATIONS.ID");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NOMBRE", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNIDADES", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("SUCURSAL", com.openbravo.data.loader.Datas.STRING);
+report;
